@@ -43,7 +43,7 @@ body::before {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 28px;
   flex-wrap: wrap;
   gap: 12px;
 }
