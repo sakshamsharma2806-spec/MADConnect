@@ -333,6 +333,9 @@ tbody tr:last-child td { border-bottom: none; }
   align-items: center;
   z-index: 999;
 }
+.modal.active {
+  display: flex;
+}
 
 .modal-content {
   width: 500px;

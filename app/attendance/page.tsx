@@ -123,22 +123,27 @@ export default function AttendancePage() {
 
       <div className={`modal ${detailsModal ? "active" : ""}`} onClick={(e) => { if (e.target === e.currentTarget) setDetailsModal(false); }}>
         <div className="modal-content">
+          <button className="modal-close" onClick={() => setDetailsModal(false)}>&times;</button>
           <h2>Attendance Details</h2>
           {detailsSession && (
             <div>
               <p><strong>Date:</strong> {formatDate(detailsSession.date)}</p>
               <p><strong>Shelter:</strong> {detailsSession.shelter}</p>
-              <p><strong>Present:</strong> {detailsSession.present.length} volunteers</p>
-              <ul style={{ marginTop: "8px", paddingLeft: "20px" }}>
-                {detailsSession.present.map((name) => <li key={name}>{name}</li>)}
-              </ul>
+              <p><strong>Total Present:</strong> {detailsSession.present.length} volunteers</p>
+              {detailsSession.present.length === 0 ? (
+                <p style={{ color: "var(--text-muted)", marginTop: "8px" }}>No volunteers were present on this date.</p>
+              ) : (
+                <ul style={{ marginTop: "8px", paddingLeft: "20px" }}>
+                  {detailsSession.present.map((name) => <li key={name} style={{ padding: "4px 0" }}>{name}</li>)}
+                </ul>
+              )}
             </div>
           )}
-          <button className="save-btn" onClick={() => setDetailsModal(false)}>Close</button>
+          <button className="primary-btn" style={{ marginTop: "16px" }} onClick={() => setDetailsModal(false)}>Close</button>
         </div>
       </div>
 
-      {toastMsg && <div className="toast active" onClick={() => setToastMsg("")}>{toastMsg}</div>}
+      {toastMsg && <div className={`toast ${toastMsg ? "show" : ""}`} onClick={() => setToastMsg("")}>{toastMsg}</div>}
     </div>
   );
 }

@@ -163,7 +163,7 @@ export default function MadConnectPage() {
         </div>
       </div>
 
-      {toastMsg && <div className="toast active" onClick={() => setToastMsg("")}>{toastMsg}</div>}
+      {toastMsg && <div className="toast show" onClick={() => setToastMsg("")}>{toastMsg}</div>}
     </div>
   );
 }

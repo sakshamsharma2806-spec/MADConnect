@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 
-interface GalleryItem { _id: string; title: string; description: string; category: string; color: string; chapterId: string; createdAt: string; }
+interface GalleryItem { _id: string; title: string; description: string; category: string; color: string; chapterId: string; uploadedBy: string; uploadedByName: string; date: string; status: string; }
 
 export default function GalleryPage() {
   const router = useRouter();
-  const [user, setUser] = useState<{ chapterId: string; chapterName: string } | null>(null);
+  const [user, setUser] = useState<{ chapterId: string; chapterName: string; role: string } | null>(null);
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [category, setCategory] = useState("all");
   const [uploadModal, setUploadModal] = useState(false);
@@ -38,7 +38,7 @@ export default function GalleryPage() {
   const filtered = items.filter((i) => category === "all" || i.category === category);
 
   const handleSave = async () => {
-    if (!form.title.trim()) { setToastMsg("Please enter a title."); return; }
+    if (!form.title.trim()) { setToastMsg("Please enter a title."); setTimeout(() => setToastMsg(""), 3000); return; }
     if (!user) return;
     const data = { ...form, chapterId: user.chapterId };
     try {
@@ -52,6 +52,7 @@ export default function GalleryPage() {
       setUploadModal(false); setForm({ title: "", description: "", category: "class", color: "#e61e4d" }); setEditingId(null);
       if (user) loadGallery(user.chapterId);
     } catch { setToastMsg("Failed to save."); }
+    setTimeout(() => setToastMsg(""), 3000);
   };
 
   const handleDelete = async (id: string) => {
@@ -61,9 +62,9 @@ export default function GalleryPage() {
       setToastMsg("Deleted!"); setLightbox(null);
       if (user) loadGallery(user.chapterId);
     } catch { setToastMsg("Failed to delete."); }
+    setTimeout(() => setToastMsg(""), 3000);
   };
 
-  const colors = ["#e61e4d", "#3b82f6", "#22c55e", "#f59e0b", "#8b5cf6", "#06b6d4", "#ec4899", "#14b8a6"];
   const catIcons: Record<string, string> = { class: "\u{1F4DA}", event: "\u{1F389}", milestone: "\u{1F3C6}", community: "\u{1F91D}" };
 
   return (
@@ -92,13 +93,16 @@ export default function GalleryPage() {
             <p style={{ gridColumn: "1/-1", textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>No photos yet.</p>
           ) : filtered.map((item) => (
             <div key={item._id} className="gallery-card" onClick={() => setLightbox(item)}>
-              <div className="gallery-placeholder" style={{ background: item.color || "#e61e4d" }}>
-                <span className="placeholder-icon">{catIcons[item.category] || "\u{1F4F7}"}</span>
+              <div className="gallery-card-image" style={{ background: item.color || "#e61e4d" }}>
+                <span className="category-icon">{catIcons[item.category] || "\u{1F4F7}"}</span>
               </div>
-              <div className="gallery-info">
-                <h3>{item.title}</h3>
-                <p>{item.description?.substring(0, 80)}</p>
-                <span className="gallery-category">{catIcons[item.category]} {item.category}</span>
+              <div className="gallery-card-body">
+                <h3 className="gallery-card-title">{item.title}</h3>
+                <p className="gallery-card-desc">{item.description?.substring(0, 80)}</p>
+                <div className="gallery-card-meta">
+                  <span className="gallery-card-category">{catIcons[item.category]} {item.category}</span>
+                  <span className={`gallery-card-status status-${item.status || "approved"}`}>{item.status || "approved"}</span>
+                </div>
               </div>
             </div>
           ))}
@@ -119,7 +123,7 @@ export default function GalleryPage() {
           <div className="form-group">
             <label>Image Preview</label>
             <div className="color-picker">
-              {colors.map((c) => (
+              {["#e61e4d", "#3b82f6", "#22c55e", "#f59e0b", "#8b5cf6", "#06b6d4", "#ec4899", "#14b8a6"].map((c) => (
                 <div key={c} className={`color-swatch ${form.color === c ? "active" : ""}`} style={{ background: c }} onClick={() => setForm({ ...form, color: c })}></div>
               ))}
             </div>
@@ -137,24 +141,28 @@ export default function GalleryPage() {
           <button className="modal-close lightbox-close" onClick={() => setLightbox(null)}>&times;</button>
           {lightbox && (
             <>
-              <div className="lightbox-image" style={{ background: lightbox.color || "#e61e4d", minHeight: "300px", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ fontSize: "64px" }}>{catIcons[lightbox.category] || "\u{1F4F7}"}</span>
+              <div id="lightboxImage" style={{ background: lightbox.color || "#e61e4d" }}>
+                <span>{catIcons[lightbox.category] || "\u{1F4F7}"}</span>
               </div>
-              <div className="lightbox-info">
-                <h3>{lightbox.title}</h3>
+              <div id="lightboxInfo">
+                <h2>{lightbox.title}</h2>
                 <p>{lightbox.description}</p>
-                <span className="gallery-category">{catIcons[lightbox.category]} {lightbox.category}</span>
+                <div className="lightbox-meta">
+                  <span>{catIcons[lightbox.category]} {lightbox.category}</span>
+                  <span>Uploaded by {lightbox.uploadedByName}</span>
+                  <span>{lightbox.date}</span>
+                </div>
               </div>
               <div className="lightbox-admin">
-                <button className="edit-btn" onClick={() => { setEditingId(lightbox._id); setForm({ title: lightbox.title, description: lightbox.description, category: lightbox.category, color: lightbox.color }); setLightbox(null); setUploadModal(true); }}>Edit</button>
-                <button className="delete-btn" onClick={() => handleDelete(lightbox._id)}>Delete</button>
+                <button className="edit-btn" onClick={(e) => { e.stopPropagation(); setEditingId(lightbox._id); setForm({ title: lightbox.title, description: lightbox.description, category: lightbox.category, color: lightbox.color }); setLightbox(null); setUploadModal(true); }}>Edit</button>
+                <button className="delete-btn" onClick={(e) => { e.stopPropagation(); handleDelete(lightbox._id); }}>Delete</button>
               </div>
             </>
           )}
         </div>
       </div>
 
-      {toastMsg && <div className="toast active" onClick={() => setToastMsg("")}>{toastMsg}</div>}
+      {toastMsg && <div className={`toast ${toastMsg ? "show" : ""}`} onClick={() => setToastMsg("")}>{toastMsg}</div>}
     </div>
   );
 }

@@ -122,6 +122,10 @@ async function seed() {
       shelter: { type: String, required: true },
       chapterId: { type: String, required: true },
       status: { type: String, enum: ["Active", "Inactive"], default: "Active" },
+      attendedSessions: { type: Number, default: 0 },
+      totalSessions: { type: Number, default: 0 },
+      attendancePercentage: { type: Number, default: 0 },
+      certificateEligible: { type: Boolean, default: false },
     }));
 
     const Attendance = mongoose.model("Attendance", new mongoose.Schema({
