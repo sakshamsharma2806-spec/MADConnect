@@ -30,6 +30,11 @@ body {
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 /* Animated background gradients */
@@ -50,10 +55,10 @@ body::before {
 
 /* SIDEBAR */
 .sidebar {
-  width: 260px;
+  width: 200px;
   background: #ffffff;
   border-right: 1px solid var(--border);
-  padding: 30px 20px;
+  padding: 24px 16px;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -116,8 +121,8 @@ body::before {
 /* CONTENT AREA */
 .content, .main-content {
   flex: 1;
-  padding: 30px 36px;
-  margin-left: 260px;
+  padding: 28px 32px;
+  margin-left: 200px;
   min-height: 100vh;
 }
 
@@ -493,12 +498,12 @@ tbody tr:last-child td { border-bottom: none; }
 
 @media (max-width: 900px) {
   .sidebar {
-    width: 70px;
-    padding: 20px 10px;
+    width: 60px;
+    padding: 16px 8px;
   }
   .logo-area h2, .sidebar-subtitle, .sidebar-bottom li { display: none; }
   .sidebar li { text-align: center; padding: 12px 8px; font-size: 18px; }
-  .content, .main-content { margin-left: 70px; padding: 24px 20px; }
+  .content, .main-content { margin-left: 60px; padding: 20px 16px; }
   header { flex-direction: column; }
 }
 

@@ -55,7 +55,7 @@ body::before {
 }
 
 .sidebar {
-  width: 260px;
+  width: 200px;
   background: #ffffff;
   border-right: 1px solid #e5e7eb;
   padding: 30px 20px;
@@ -315,10 +315,10 @@ body::before {
 /* Responsive */
 
 @media (max-width: 900px) {
-  .sidebar { width: 70px; padding: 20px 10px; }
+  .sidebar { width: 60px; padding: 16px 8px; }
   .logo-area h2, .sidebar-bottom li { display: none; }
   .sidebar li { text-align: center; padding: 12px 8px; font-size: 18px; }
-  .content { margin-left: 70px; padding: 25px 20px; }
+  .content { margin-left: 60px; padding: 20px 16px; }
 }
 
 @media (max-width: 600px) {
