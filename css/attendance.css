@@ -100,7 +100,7 @@ body::before {
 .sidebar-bottom li { color: var(--text-secondary); }
 .sidebar-bottom li:hover { background: rgba(239, 68, 68, 0.08); color: #ef4444; transform: translateX(4px); }
 
-.page-header { margin-bottom: 28px; }
+.page-header { margin-bottom: 18px; }
 .page-header h1 { font-size: 28px; font-weight: 700; color: var(--text); }
 .page-header p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
 
@@ -211,7 +211,7 @@ body::before {
 
 /* History */
 
-.history-section { margin-top: 35px; }
+.history-section { margin-top: 20px; }
 .history-section h2 { margin-bottom: 18px; color: var(--text); font-size: 18px; }
 
 .history-card {
