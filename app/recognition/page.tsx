@@ -51,8 +51,7 @@ export default function RecognitionPage() {
 
   const sorted = [...volunteers].sort((a, b) => getAttendanceRate(b.name) - getAttendanceRate(a.name));
 
-  const spotlightName = customSpotlight?.name || sorted[0]?.name || "";
-  const spotlightRate = getAttendanceRate(spotlightName);
+  const spotlightRate = customSpotlight ? getAttendanceRate(customSpotlight.name) : 0;
   const spotlightBadge = spotlightRate >= 90 ? "\u{1F3C6} Gold" : spotlightRate >= 70 ? "\u{1F948} Silver" : spotlightRate >= 50 ? "\u{1F949} Bronze" : "\u2B50 Starter";
 
   const getBadge = (rate: number) => {
@@ -62,15 +61,22 @@ export default function RecognitionPage() {
     return "\u2B50 Starter";
   };
 
-  const handleFeature = () => {
-    if (!spotlightVol) { setToastMsg("Please select a volunteer."); return; }
-    const data = { name: spotlightVol, achievement: spotlightAchievement || "Outstanding contribution" };
+  const saveSpotlight = (data: { name: string; achievement: string } | null) => {
     setCustomSpotlight(data);
     const stored = localStorage.getItem("user");
     if (stored) {
       const u = JSON.parse(stored);
-      localStorage.setItem(`spotlight_${u.chapterId}`, JSON.stringify(data));
+      if (data) {
+        localStorage.setItem(`spotlight_${u.chapterId}`, JSON.stringify(data));
+      } else {
+        localStorage.removeItem(`spotlight_${u.chapterId}`);
+      }
     }
+  };
+
+  const handleFeature = () => {
+    if (!spotlightVol) { setToastMsg("Please select a volunteer."); return; }
+    saveSpotlight({ name: spotlightVol, achievement: spotlightAchievement || "Outstanding contribution" });
     setSpotlightModal(false);
     setSpotlightVol("");
     setSpotlightAchievement("");
@@ -78,14 +84,9 @@ export default function RecognitionPage() {
     setTimeout(() => setToastMsg(""), 3000);
   };
 
-  const handleClearSpotlight = () => {
-    setCustomSpotlight(null);
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      const u = JSON.parse(stored);
-      localStorage.removeItem(`spotlight_${u.chapterId}`);
-    }
-    setToastMsg("Spotlight reset to default.");
+  const handleRemoveSpotlight = () => {
+    saveSpotlight(null);
+    setToastMsg("Spotlight cleared.");
     setTimeout(() => setToastMsg(""), 3000);
   };
 
@@ -108,23 +109,28 @@ export default function RecognitionPage() {
         <div className="rec-grid">
           <div className="rec-section spotlight-section">
             <h2>&#11088; Volunteer Spotlight</h2>
-            {spotlightName ? (
+            {customSpotlight ? (
               <div className="spotlight-card">
-                <h3>{spotlightName}</h3>
+                <h3>{customSpotlight.name}</h3>
                 <p>{spotlightRate}% attendance &middot; {spotlightBadge}</p>
-                {customSpotlight?.achievement && (
+                {customSpotlight.achievement && (
                   <p style={{ fontSize: "13px", marginTop: "6px", fontStyle: "italic", color: "var(--text-secondary)" }}>
                     &ldquo;{customSpotlight.achievement}&rdquo;
                   </p>
                 )}
               </div>
             ) : (
-              <p style={{ color: "var(--text-muted)", padding: "16px" }}>No volunteers yet.</p>
+              <div className="spotlight-card" style={{ textAlign: "center" }}>
+                <p style={{ color: "var(--text-muted)", padding: "12px 0" }}>No volunteer spotlight set.</p>
+                <p style={{ fontSize: "13px", color: "var(--text-muted)" }}>Click the button below to feature a volunteer.</p>
+              </div>
             )}
             <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
-              <button className="primary-btn" onClick={() => setSpotlightModal(true)}>Change Spotlight</button>
+              <button className="primary-btn" onClick={() => setSpotlightModal(true)}>
+                {customSpotlight ? "Change Spotlight" : "Feature a Volunteer"}
+              </button>
               {customSpotlight && (
-                <button className="secondary-btn" onClick={handleClearSpotlight}>Reset</button>
+                <button className="secondary-btn" onClick={handleRemoveSpotlight}>Remove</button>
               )}
             </div>
           </div>
@@ -178,7 +184,7 @@ export default function RecognitionPage() {
       <div className={`modal ${spotlightModal ? "active" : ""}`} onClick={(e) => { if (e.target === e.currentTarget) setSpotlightModal(false); }}>
         <div className="modal-content">
           <button className="modal-close" onClick={() => setSpotlightModal(false)}>&times;</button>
-          <h2>Feature a Volunteer</h2>
+          <h2>{customSpotlight ? "Change Spotlight" : "Feature a Volunteer"}</h2>
           <p className="modal-desc">Select a volunteer to feature in the Spotlight section.</p>
           <div className="form-group">
             <label>Select Volunteer</label>
@@ -193,7 +199,7 @@ export default function RecognitionPage() {
           </div>
           <div className="modal-buttons">
             <button className="secondary-btn" onClick={() => setSpotlightModal(false)}>Cancel</button>
-            <button className="primary-btn" onClick={handleFeature}>Feature Volunteer</button>
+            <button className="primary-btn" onClick={handleFeature}>{customSpotlight ? "Update" : "Feature Volunteer"}</button>
           </div>
         </div>
       </div>
