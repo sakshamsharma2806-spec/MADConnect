@@ -180,7 +180,7 @@ export default function HomePage() {
       `}</style>
 
       <div className="landing">
-        <header className="l-header">
+        <div className="l-header">
           <nav className="l-navbar">
             <div className="l-nav-left">
               <div className="l-brand">
@@ -193,7 +193,7 @@ export default function HomePage() {
               <img src="/mad.logo.png" alt="MAD Logo" />
             </div>
           </nav>
-        </header>
+        </div>
 
         <section className="l-hero">
           <div className="l-hero-left">
