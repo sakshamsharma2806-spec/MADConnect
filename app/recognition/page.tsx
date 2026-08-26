@@ -17,11 +17,15 @@ export default function RecognitionPage() {
   const [spotlightAchievement, setSpotlightAchievement] = useState("");
   const [toastMsg, setToastMsg] = useState("");
 
+  const [customSpotlight, setCustomSpotlight] = useState<{ name: string; achievement: string } | null>(null);
+
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (!stored) { router.push("/login"); return; }
     const u = JSON.parse(stored);
     loadData(u.chapterId);
+    const saved = localStorage.getItem(`spotlight_${u.chapterId}`);
+    if (saved) setCustomSpotlight(JSON.parse(saved));
   }, [router]);
 
   function getToken() { const m = document.cookie.match(/token=([^;]+)/); return m ? m[1] : ""; }
@@ -46,13 +50,43 @@ export default function RecognitionPage() {
   };
 
   const sorted = [...volunteers].sort((a, b) => getAttendanceRate(b.name) - getAttendanceRate(a.name));
-  const spotlight = sorted[0];
+
+  const spotlightName = customSpotlight?.name || sorted[0]?.name || "";
+  const spotlightRate = getAttendanceRate(spotlightName);
+  const spotlightBadge = spotlightRate >= 90 ? "\u{1F3C6} Gold" : spotlightRate >= 70 ? "\u{1F948} Silver" : spotlightRate >= 50 ? "\u{1F949} Bronze" : "\u2B50 Starter";
 
   const getBadge = (rate: number) => {
     if (rate >= 90) return "\u{1F3C6} Gold";
     if (rate >= 70) return "\u{1F948} Silver";
     if (rate >= 50) return "\u{1F949} Bronze";
     return "\u2B50 Starter";
+  };
+
+  const handleFeature = () => {
+    if (!spotlightVol) { setToastMsg("Please select a volunteer."); return; }
+    const data = { name: spotlightVol, achievement: spotlightAchievement || "Outstanding contribution" };
+    setCustomSpotlight(data);
+    const stored = localStorage.getItem("user");
+    if (stored) {
+      const u = JSON.parse(stored);
+      localStorage.setItem(`spotlight_${u.chapterId}`, JSON.stringify(data));
+    }
+    setSpotlightModal(false);
+    setSpotlightVol("");
+    setSpotlightAchievement("");
+    setToastMsg("Volunteer spotlight updated!");
+    setTimeout(() => setToastMsg(""), 3000);
+  };
+
+  const handleClearSpotlight = () => {
+    setCustomSpotlight(null);
+    const stored = localStorage.getItem("user");
+    if (stored) {
+      const u = JSON.parse(stored);
+      localStorage.removeItem(`spotlight_${u.chapterId}`);
+    }
+    setToastMsg("Spotlight reset to default.");
+    setTimeout(() => setToastMsg(""), 3000);
   };
 
   return (
@@ -74,15 +108,25 @@ export default function RecognitionPage() {
         <div className="rec-grid">
           <div className="rec-section spotlight-section">
             <h2>&#11088; Volunteer Spotlight</h2>
-            {spotlight ? (
+            {spotlightName ? (
               <div className="spotlight-card">
-                <h3>{spotlight.name}</h3>
-                <p>{getAttendanceRate(spotlight.name)}% attendance</p>
+                <h3>{spotlightName}</h3>
+                <p>{spotlightRate}% attendance &middot; {spotlightBadge}</p>
+                {customSpotlight?.achievement && (
+                  <p style={{ fontSize: "13px", marginTop: "6px", fontStyle: "italic", color: "var(--text-secondary)" }}>
+                    &ldquo;{customSpotlight.achievement}&rdquo;
+                  </p>
+                )}
               </div>
             ) : (
               <p style={{ color: "var(--text-muted)", padding: "16px" }}>No volunteers yet.</p>
             )}
-            <button className="primary-btn" onClick={() => setSpotlightModal(true)} style={{ marginTop: "12px" }}>Feature a Volunteer</button>
+            <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+              <button className="primary-btn" onClick={() => setSpotlightModal(true)}>Change Spotlight</button>
+              {customSpotlight && (
+                <button className="secondary-btn" onClick={handleClearSpotlight}>Reset</button>
+              )}
+            </div>
           </div>
 
           <div className="rec-section leaderboard-section">
@@ -149,7 +193,7 @@ export default function RecognitionPage() {
           </div>
           <div className="modal-buttons">
             <button className="secondary-btn" onClick={() => setSpotlightModal(false)}>Cancel</button>
-            <button className="primary-btn" onClick={() => { setToastMsg("Volunteer featured!"); setSpotlightModal(false); }}>Feature Volunteer</button>
+            <button className="primary-btn" onClick={handleFeature}>Feature Volunteer</button>
           </div>
         </div>
       </div>
