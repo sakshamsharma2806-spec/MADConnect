@@ -41,9 +41,10 @@ export default function HomePage() {
           max-width: 1200px; margin: 0 auto; padding: 0 2rem; height: 72px;
           display: flex; align-items: center; justify-content: space-between;
         }
+        .l-nav-left { flex: 1; }
         .l-nav-left .l-brand h2 { font-size: 1.35rem; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
         .l-nav-left .l-brand p { font-size: 0.7rem; color: var(--text-secondary); font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; }
-        .l-nav-right { display: flex; align-items: center; gap: 1.25rem; }
+        .l-nav-right { display: flex; align-items: center; gap: 1.25rem; justify-content: flex-end; }
         .l-nav-right img { height: 38px; width: auto; border-radius: 8px; }
         .l-login-btn {
           padding: 0.55rem 1.6rem; background: var(--white); color: var(--primary);
