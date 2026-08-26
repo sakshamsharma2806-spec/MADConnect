@@ -121,6 +121,11 @@ body::before {
   min-height: 100vh;
 }
 
+.content .main-content {
+  margin-left: 0;
+  padding: 0;
+}
+
 /* PAGE HEADER */
 .page-header {
   display: flex;
