@@ -3,6 +3,27 @@ import { connectToDatabase } from "@/lib/mongodb";
 import Story from "@/lib/models/Story";
 import { requireAuth } from "@/lib/auth";
 
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const auth = requireAuth(request);
+  if (auth instanceof NextResponse) return auth;
+
+  try {
+    await connectToDatabase();
+    const { id } = await params;
+    const story = await Story.findById(id).lean();
+    if (!story) {
+      return NextResponse.json({ error: "Story not found" }, { status: 404 });
+    }
+    return NextResponse.json(story);
+  } catch (error) {
+    console.error("Error fetching story:", error);
+    return NextResponse.json({ error: "Failed to fetch story" }, { status: 500 });
+  }
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
