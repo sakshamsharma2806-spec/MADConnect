@@ -110,8 +110,10 @@ export default function VolunteersPage() {
                   </td>
                   <td><span className={`status ${v.status === "Active" ? "active-status" : "inactive-status"}`}>{v.status}</span></td>
                   <td>
-                    <button className="edit-btn" onClick={() => { setEditingId(v._id); setForm({ name: v.name, phone: v.phone, status: v.status }); setModalOpen(true); }}>{"\u270F"}</button>
-                    <button className="delete-btn" onClick={() => handleDelete(v._id)}>{"\u{1F5D1}"}</button>
+                    <div style={{ display: "flex", gap: "6px" }}>
+                      <button className="edit-btn" onClick={() => { setEditingId(v._id); setForm({ name: v.name, phone: v.phone, status: v.status }); setModalOpen(true); }}>Edit</button>
+                      <button className="delete-btn" onClick={() => handleDelete(v._id)}>Delete</button>
+                    </div>
                   </td>
                 </tr>
               ))}

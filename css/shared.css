@@ -321,6 +321,38 @@ tbody tr:last-child td { border-bottom: none; }
 .active-status { background: #dcfce7; color: #15803d; }
 .inactive-status { background: #fee2e2; color: #dc2626; }
 
+/* EDIT / DELETE BUTTONS */
+.edit-btn, .delete-btn {
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 7px 14px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.edit-btn {
+  background: #eff6ff;
+  color: #2563eb;
+}
+.edit-btn:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+.delete-btn {
+  background: #fef2f2;
+  color: #dc2626;
+}
+.delete-btn:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
 /* MODAL */
 .modal {
   display: none;
