@@ -1,0 +1,158 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Sidebar from "@/components/Sidebar";
+
+interface Volunteer { _id: string; name: string; chapterId: string; }
+interface AttendanceSession { _id: string; date: string; present: string[]; chapterId: string; }
+
+export default function RecognitionPage() {
+  const router = useRouter();
+  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
+  const [sessions, setSessions] = useState<AttendanceSession[]>([]);
+  const [period, setPeriod] = useState("month");
+  const [spotlightModal, setSpotlightModal] = useState(false);
+  const [spotlightVol, setSpotlightVol] = useState("");
+  const [spotlightAchievement, setSpotlightAchievement] = useState("");
+  const [toastMsg, setToastMsg] = useState("");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (!stored) { router.push("/login"); return; }
+    const u = JSON.parse(stored);
+    loadData(u.chapterId);
+  }, [router]);
+
+  function getToken() { const m = document.cookie.match(/token=([^;]+)/); return m ? m[1] : ""; }
+
+  async function loadData(chapterId: string) {
+    try {
+      const [vRes, aRes] = await Promise.all([
+        fetch(`/api/volunteers?chapterId=${chapterId}`, { headers: { Authorization: `Bearer ${getToken()}` } }),
+        fetch(`/api/attendance?chapterId=${chapterId}`, { headers: { Authorization: `Bearer ${getToken()}` } }),
+      ]);
+      setVolunteers(Array.isArray(await vRes.json()) ? (await vRes.json()) : []);
+      setSessions(Array.isArray(await aRes.json()) ? (await aRes.json()) : []);
+    } catch {}
+  }
+
+  const getAttendanceRate = (volName: string) => {
+    let total = 0, present = 0;
+    sessions.forEach((s) => { total++; if (s.present.includes(volName)) present++; });
+    return total > 0 ? Math.round((present / total) * 100) : 0;
+  };
+
+  const sorted = [...volunteers].sort((a, b) => getAttendanceRate(b.name) - getAttendanceRate(a.name));
+  const spotlight = sorted[0];
+
+  const getBadge = (rate: number) => {
+    if (rate >= 90) return "\u{1F3C6} Gold";
+    if (rate >= 70) return "\u{1F948} Silver";
+    if (rate >= 50) return "\u{1F949} Bronze";
+    return "\u2B50 Starter";
+  };
+
+  return (
+    <div className="dashboard">
+      <Sidebar />
+      <main className="content">
+        <div className="page-header">
+          <div>
+            <h1>&#127942; Recognition</h1>
+            <p>Celebrate our amazing volunteers and chapters</p>
+          </div>
+          <div className="period-selector">
+            <button className={`period-btn ${period === "month" ? "active" : ""}`} onClick={() => setPeriod("month")}>This Month</button>
+            <button className={`period-btn ${period === "quarter" ? "active" : ""}`} onClick={() => setPeriod("quarter")}>This Quarter</button>
+            <button className={`period-btn ${period === "all" ? "active" : ""}`} onClick={() => setPeriod("all")}>All Time</button>
+          </div>
+        </div>
+
+        <div className="rec-grid">
+          <div className="rec-section spotlight-section">
+            <h2>&#11088; Volunteer Spotlight</h2>
+            {spotlight ? (
+              <div className="spotlight-card">
+                <h3>{spotlight.name}</h3>
+                <p>{getAttendanceRate(spotlight.name)}% attendance</p>
+              </div>
+            ) : (
+              <p style={{ color: "var(--text-muted)", padding: "16px" }}>No volunteers yet.</p>
+            )}
+            <button className="primary-btn" onClick={() => setSpotlightModal(true)} style={{ marginTop: "12px" }}>Feature a Volunteer</button>
+          </div>
+
+          <div className="rec-section leaderboard-section">
+            <h2>&#127941; Best Chapter Leaderboard</h2>
+            {sorted.slice(0, 5).map((v, i) => (
+              <div key={v._id} className="leaderboard-row">
+                <span className="rank">{i + 1}</span>
+                <span className="name">{v.name}</span>
+                <span className="rate">{getAttendanceRate(v.name)}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rec-section badges-section">
+          <h2>&#127991; Milestone Badges</h2>
+          <div className="badges-grid">
+            {[{ label: "100% Attendance", icon: "\u{1F31F}" }, { label: "10+ Sessions", icon: "\u{1F4DA}" }, { label: "Volunteer Champion", icon: "\u{1F3C5}" }, { label: "MAD Star", icon: "\u2B50" }].map((b) => (
+              <div key={b.label} className="badge-card">
+                <span className="badge-icon">{b.icon}</span>
+                <p>{b.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rec-section top-performers-section">
+          <h2>&#128200; Top Performers</h2>
+          <div className="performers-table-wrapper">
+            <table className="performers-table">
+              <thead>
+                <tr><th>Rank</th><th>Volunteer</th><th>Attendance</th><th>Badge</th></tr>
+              </thead>
+              <tbody>
+                {sorted.map((v, i) => (
+                  <tr key={v._id}>
+                    <td>{i + 1}</td>
+                    <td>{v.name}</td>
+                    <td>{getAttendanceRate(v.name)}%</td>
+                    <td>{getBadge(getAttendanceRate(v.name))}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+
+      <div className={`modal ${spotlightModal ? "active" : ""}`} onClick={(e) => { if (e.target === e.currentTarget) setSpotlightModal(false); }}>
+        <div className="modal-content">
+          <button className="modal-close" onClick={() => setSpotlightModal(false)}>&times;</button>
+          <h2>Feature a Volunteer</h2>
+          <p className="modal-desc">Select a volunteer to feature in the Spotlight section.</p>
+          <div className="form-group">
+            <label>Select Volunteer</label>
+            <select value={spotlightVol} onChange={(e) => setSpotlightVol(e.target.value)}>
+              <option value="">-- Select --</option>
+              {volunteers.map((v) => <option key={v._id} value={v.name}>{v.name}</option>)}
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Achievement</label>
+            <input type="text" placeholder="e.g. 100% attendance this month" value={spotlightAchievement} onChange={(e) => setSpotlightAchievement(e.target.value)} />
+          </div>
+          <div className="modal-buttons">
+            <button className="secondary-btn" onClick={() => setSpotlightModal(false)}>Cancel</button>
+            <button className="primary-btn" onClick={() => { setToastMsg("Volunteer featured!"); setSpotlightModal(false); }}>Feature Volunteer</button>
+          </div>
+        </div>
+      </div>
+
+      {toastMsg && <div className="toast active" onClick={() => setToastMsg("")}>{toastMsg}</div>}
+    </div>
+  );
+}

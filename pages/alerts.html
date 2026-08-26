@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAD Connect | Alerts</title>
+    <link rel="stylesheet" href="../css/shared.css" />
+    <link rel="stylesheet" href="../css/alerts.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <img src="../image/mad.logo.png" alt="MAD Logo" />
+          <div>
+            <h2>MAD Connect</h2>
+          </div>
+        </div>
+        <ul>
+          <li onclick="window.location.href='dashboard.html'">&#127968; Dashboard</li>
+          <li onclick="window.location.href='volunteers.html'">&#128101; Volunteers</li>
+          <li onclick="window.location.href='attendance.html'">&#9989; Attendance</li>
+          <li onclick="window.location.href='analytics.html'">&#128202; Analytics</li>
+          <li onclick="window.location.href='madconnect.html'">&#127758; MAD Connect</li>
+                <li onclick="window.location.href='recognition.html'">&#127942; Recognition</li>
+          <li onclick="window.location.href='stories.html'">&#128214; Stories</li>
+          <li onclick="window.location.href='gallery.html'">&#128247; Gallery</li>
+          <li class="active" onclick="window.location.href='alerts.html'">&#128276; Alerts</li>
+          <li onclick="window.location.href='settings.html'">&#9881; Settings</li>
+        </ul>
+        <div class="sidebar-bottom">
+          <li onclick="handleLogout()">&#128682; Logout</li>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="page-header">
+          <div>
+            <h1>&#128276; Alerts & Notifications</h1>
+            <p>Stay informed about chapter activity across the network</p>
+          </div>
+        </div>
+
+        <div class="alt-toolbar">
+          <div class="alt-filters" id="alertFilters">
+            <button class="alt-filter-btn active" data-filter="all">All</button>
+            <button class="alt-filter-btn" data-filter="warning">&#9888; Warnings</button>
+            <button class="alt-filter-btn" data-filter="success">&#9989; Success</button>
+            <button class="alt-filter-btn" data-filter="info">&#8505; Info</button>
+            <button class="alt-filter-btn" data-filter="danger">&#10060; Danger</button>
+          </div>
+          <button class="alt-clear-btn" id="clearAllBtn">&#128465; Clear All</button>
+        </div>
+
+        <div class="alt-summary" id="alertSummary"></div>
+
+        <div class="alt-list" id="alertList"></div>
+      </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      function handleLogout() {
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("chapterId");
+        localStorage.removeItem("chapterName");
+        window.location.href = "../index.html";
+      }
+    </script>
+    <script type="module" src="../js/alerts.js"></script>
+  </body>
+</html>

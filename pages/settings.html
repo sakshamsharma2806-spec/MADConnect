@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAD Connect | Settings</title>
+    <link rel="stylesheet" href="../css/shared.css" />
+    <link rel="stylesheet" href="../css/settings.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <img src="../image/mad.logo.png" alt="MAD Logo" />
+          <div>
+            <h2>MAD Connect</h2>
+          </div>
+        </div>
+        <ul>
+          <li onclick="window.location.href='dashboard.html'">&#127968; Dashboard</li>
+          <li onclick="window.location.href='volunteers.html'">&#128101; Volunteers</li>
+          <li onclick="window.location.href='attendance.html'">&#9989; Attendance</li>
+          <li onclick="window.location.href='analytics.html'">&#128202; Analytics</li>
+          <li onclick="window.location.href='madconnect.html'">&#127758; MAD Connect</li>
+                <li onclick="window.location.href='recognition.html'">&#127942; Recognition</li>
+          <li onclick="window.location.href='stories.html'">&#128214; Stories</li>
+          <li onclick="window.location.href='gallery.html'">&#128247; Gallery</li>
+          <li onclick="window.location.href='alerts.html'">&#128276; Alerts</li>
+          <li class="active" onclick="window.location.href='settings.html'">&#9881; Settings</li>
+        </ul>
+        <div class="sidebar-bottom">
+          <li onclick="handleLogout()">&#128682; Logout</li>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header>
+          <div class="welcome">
+            <h1>&#9881; Settings</h1>
+            <p>Manage your account and preferences</p>
+          </div>
+        </header>
+
+        <section class="main-content">
+          <div class="settings-grid">
+            <div class="settings-card">
+              <h2>Account</h2>
+              <div class="settings-item">
+                <label>Name</label>
+                <p id="settingsName">Not logged in</p>
+              </div>
+              <div class="settings-item">
+                <label>Email</label>
+                <p id="settingsEmail">Not logged in</p>
+              </div>
+              <div class="settings-item">
+                <label>Role</label>
+                <p id="settingsRole">Chapter Organizer</p>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h2>Chapter</h2>
+              <div class="settings-item">
+                <label>Chapter Name</label>
+                <p id="settingsChapterName">-</p>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h2>Actions</h2>
+              <button class="settings-btn logout-btn" onclick="handleLogout()">
+                &#128682; Logout
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      function handleLogout() {
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("chapterId");
+        localStorage.removeItem("chapterName");
+        window.location.href = "../index.html";
+      }
+
+      const nameEl = document.getElementById("settingsName");
+      const emailEl = document.getElementById("settingsEmail");
+      const roleEl = document.getElementById("settingsRole");
+      const chapterEl = document.getElementById("settingsChapterName");
+
+      const name = localStorage.getItem("userName");
+      const email = localStorage.getItem("userEmail");
+      const role = localStorage.getItem("userRole");
+      const chapterName = localStorage.getItem("chapterName");
+
+      if (name) nameEl.textContent = name;
+      if (email) emailEl.textContent = email;
+      roleEl.textContent = role === "admin" ? "Core Member / Admin" : "Chapter Organizer";
+      if (chapterName) chapterEl.textContent = chapterName;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAD Connect | Chapter Stories</title>
+    <link rel="stylesheet" href="../css/shared.css" />
+    <link rel="stylesheet" href="../css/stories.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <img src="../image/mad.logo.png" alt="MAD Logo" />
+          <div>
+            <h2>MAD Connect</h2>
+          </div>
+        </div>
+        <ul>
+          <li onclick="window.location.href='dashboard.html'">&#127968; Dashboard</li>
+          <li onclick="window.location.href='volunteers.html'">&#128101; Volunteers</li>
+          <li onclick="window.location.href='attendance.html'">&#9989; Attendance</li>
+          <li onclick="window.location.href='analytics.html'">&#128202; Analytics</li>
+          <li onclick="window.location.href='madconnect.html'">&#127758; MAD Connect</li>
+                <li onclick="window.location.href='recognition.html'">&#127942; Recognition</li>
+          <li class="active" onclick="window.location.href='stories.html'">&#128214; Stories</li>
+          <li onclick="window.location.href='gallery.html'">&#128247; Gallery</li>
+          <li onclick="window.location.href='alerts.html'">&#128276; Alerts</li>
+          <li onclick="window.location.href='settings.html'">&#9881; Settings</li>
+        </ul>
+        <div class="sidebar-bottom">
+          <li onclick="handleLogout()">&#128682; Logout</li>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="page-header">
+          <div>
+            <h1>&#128221; Chapter Stories</h1>
+            <p>Share and read stories from across MAD chapters</p>
+          </div>
+          <button id="writeStoryBtn" class="primary-btn">&#9998; Write Story</button>
+        </div>
+
+        <div class="stories-filters">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search by title or tags..." />
+          </div>
+          <div class="status-toggles" id="statusToggles">
+            <button class="toggle-btn active" data-status="all">All</button>
+            <button class="toggle-btn" data-status="published">Published</button>
+            <button class="toggle-btn" data-status="draft">Drafts</button>
+            <button class="toggle-btn" data-status="pending_review">Pending Review</button>
+          </div>
+        </div>
+
+        <div class="stories-grid" id="storiesGrid"></div>
+      </main>
+    </div>
+
+    <div id="storyModal" class="modal">
+      <div class="modal-content">
+        <button class="modal-close" id="closeStoryModal">&times;</button>
+        <h2 id="storyModalTitle">Write a New Story</h2>
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="storyTitle" placeholder="Enter story title" />
+        </div>
+        <div class="form-group">
+          <label>Content</label>
+          <textarea id="storyContent" rows="10" placeholder="Write your story here..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Tags (comma-separated)</label>
+          <input type="text" id="storyTags" placeholder="e.g. best practices, volunteer experience" />
+        </div>
+        <div class="form-group" id="statusFieldGroup">
+          <label>Status</label>
+          <select id="storyStatus">
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+            <option value="pending_review">Pending Review</option>
+          </select>
+        </div>
+        <div class="modal-buttons">
+          <button id="cancelStoryBtn" class="secondary-btn">Cancel</button>
+          <button id="saveStoryBtn" class="primary-btn">Save Story</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="viewStoryModal" class="modal">
+      <div class="modal-content modal-lg">
+        <button class="modal-close" id="closeViewModal">&times;</button>
+        <div id="viewStoryContent"></div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      function handleLogout() {
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("chapterId");
+        localStorage.removeItem("chapterName");
+        window.location.href = "../index.html";
+      }
+    </script>
+    <script type="module" src="../js/stories.js"></script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "name": "mad-connect",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "seed": "node scripts/seed.mjs"
+  },
+  "dependencies": {
+    "next": "15.3.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "mongoose": "^8.15.1",
+    "bcryptjs": "^3.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "chart.js": "^4.4.8",
+    "react-chartjs-2": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.9",
+    "typescript": "^5"
+  }
+}

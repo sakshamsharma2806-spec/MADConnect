@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAD Connect | Recognition</title>
+    <link rel="stylesheet" href="../css/shared.css" />
+    <link rel="stylesheet" href="../css/recognition.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <img src="../image/mad.logo.png" alt="MAD Logo" />
+          <div>
+            <h2>MAD Connect</h2>
+          </div>
+        </div>
+        <ul>
+          <li onclick="window.location.href='dashboard.html'">&#127968; Dashboard</li>
+          <li onclick="window.location.href='volunteers.html'">&#128101; Volunteers</li>
+          <li onclick="window.location.href='attendance.html'">&#9989; Attendance</li>
+          <li onclick="window.location.href='analytics.html'">&#128202; Analytics</li>
+          <li onclick="window.location.href='madconnect.html'">&#127758; MAD Connect</li>
+                <li class="active" onclick="window.location.href='recognition.html'">&#127942; Recognition</li>
+          <li onclick="window.location.href='stories.html'">&#128214; Stories</li>
+          <li onclick="window.location.href='gallery.html'">&#128247; Gallery</li>
+          <li onclick="window.location.href='alerts.html'">&#128276; Alerts</li>
+          <li onclick="window.location.href='settings.html'">&#9881; Settings</li>
+        </ul>
+        <div class="sidebar-bottom">
+          <li onclick="handleLogout()">&#128682; Logout</li>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="page-header">
+          <div>
+            <h1>&#127942; Recognition</h1>
+            <p>Celebrate our amazing volunteers and chapters</p>
+          </div>
+          <div class="period-selector">
+            <button class="period-btn active" data-period="month">This Month</button>
+            <button class="period-btn" data-period="quarter">This Quarter</button>
+            <button class="period-btn" data-period="all">All Time</button>
+          </div>
+        </div>
+
+        <div class="rec-grid">
+          <div class="rec-section spotlight-section">
+            <h2>&#11088; Volunteer Spotlight</h2>
+            <div id="spotlightContainer"></div>
+          </div>
+
+          <div class="rec-section leaderboard-section">
+            <h2>&#127941; Best Chapter Leaderboard</h2>
+            <div id="leaderboardContainer"></div>
+          </div>
+        </div>
+
+        <div class="rec-section badges-section">
+          <h2>&#127991; Milestone Badges</h2>
+          <div class="badges-grid" id="badgesContainer"></div>
+        </div>
+
+        <div class="rec-section top-performers-section">
+          <h2>&#128200; Top Performers</h2>
+          <div class="performers-table-wrapper">
+            <table class="performers-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Volunteer</th>
+                  <th>Chapter</th>
+                  <th>Attendance</th>
+                  <th>Badge</th>
+                </tr>
+              </thead>
+              <tbody id="performersTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="spotlightModal" class="modal">
+      <div class="modal-content">
+        <button class="modal-close" id="closeSpotlightModal">&times;</button>
+        <h2>Feature a Volunteer</h2>
+        <p class="modal-desc">Select a volunteer to feature in the Spotlight section.</p>
+        <div class="form-group">
+          <label>Select Volunteer</label>
+          <select id="spotlightSelect"></select>
+        </div>
+        <div class="form-group">
+          <label>Achievement</label>
+          <input type="text" id="spotlightAchievement" placeholder="e.g. 100% attendance this month" />
+        </div>
+        <div class="modal-buttons">
+          <button id="cancelSpotlightBtn" class="secondary-btn">Cancel</button>
+          <button id="saveSpotlightBtn" class="primary-btn">Feature Volunteer</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      function handleLogout() {
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("chapterId");
+        localStorage.removeItem("chapterName");
+        window.location.href = "../index.html";
+      }
+    </script>
+    <script type="module" src="../js/recognition.js"></script>
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAD Connect | Gallery</title>
+    <link rel="stylesheet" href="../css/shared.css" />
+    <link rel="stylesheet" href="../css/gallery.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <img src="../image/mad.logo.png" alt="MAD Logo" />
+          <div>
+            <h2>MAD Connect</h2>
+          </div>
+        </div>
+        <ul>
+          <li onclick="window.location.href='dashboard.html'">&#127968; Dashboard</li>
+          <li onclick="window.location.href='volunteers.html'">&#128101; Volunteers</li>
+          <li onclick="window.location.href='attendance.html'">&#9989; Attendance</li>
+          <li onclick="window.location.href='analytics.html'">&#128202; Analytics</li>
+          <li onclick="window.location.href='madconnect.html'">&#127758; MAD Connect</li>
+                <li onclick="window.location.href='recognition.html'">&#127942; Recognition</li>
+          <li onclick="window.location.href='stories.html'">&#128214; Stories</li>
+          <li class="active" onclick="window.location.href='gallery.html'">&#128247; Gallery</li>
+          <li onclick="window.location.href='alerts.html'">&#128276; Alerts</li>
+          <li onclick="window.location.href='settings.html'">&#9881; Settings</li>
+        </ul>
+        <div class="sidebar-bottom">
+          <li onclick="handleLogout()">&#128682; Logout</li>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="page-header">
+          <div>
+            <h1>&#127912; Chapter Gallery</h1>
+            <p>Moments captured from MAD chapter activities</p>
+          </div>
+          <button id="uploadBtn" class="primary-btn">&#128228; Upload Photo</button>
+        </div>
+
+        <div class="gallery-toolbar">
+          <div class="category-chips" id="categoryChips">
+            <button class="chip active" data-category="all">All</button>
+            <button class="chip" data-category="class">&#128218; Class</button>
+            <button class="chip" data-category="event">&#127881; Event</button>
+            <button class="chip" data-category="milestone">&#127942; Milestone</button>
+            <button class="chip" data-category="community">&#129309; Community</button>
+          </div>
+          <div class="gallery-stats" id="galleryStats"></div>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </main>
+    </div>
+
+    <div id="uploadModal" class="modal">
+      <div class="modal-content">
+        <button class="modal-close" id="closeUploadModal">&times;</button>
+        <h2 id="uploadModalTitle">Upload to Gallery</h2>
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="galleryTitle" placeholder="Enter a title" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="galleryDesc" rows="4" placeholder="Describe this moment..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="galleryCategory">
+            <option value="class">Class</option>
+            <option value="event">Event</option>
+            <option value="milestone">Milestone</option>
+            <option value="community">Community</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Image Preview</label>
+          <div class="color-picker" id="colorPicker">
+            <div class="color-swatch active" data-color="#e61e4d" style="background:#e61e4d;"></div>
+            <div class="color-swatch" data-color="#3b82f6" style="background:#3b82f6;"></div>
+            <div class="color-swatch" data-color="#22c55e" style="background:#22c55e;"></div>
+            <div class="color-swatch" data-color="#f59e0b" style="background:#f59e0b;"></div>
+            <div class="color-swatch" data-color="#8b5cf6" style="background:#8b5cf6;"></div>
+            <div class="color-swatch" data-color="#06b6d4" style="background:#06b6d4;"></div>
+            <div class="color-swatch" data-color="#ec4899" style="background:#ec4899;"></div>
+            <div class="color-swatch" data-color="#14b8a6" style="background:#14b8a6;"></div>
+          </div>
+          <p class="color-hint">Select a placeholder color for the image</p>
+        </div>
+        <div class="modal-buttons">
+          <button id="cancelUploadBtn" class="secondary-btn">Cancel</button>
+          <button id="saveUploadBtn" class="primary-btn">Upload</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="lightboxModal" class="modal">
+      <div class="lightbox-content">
+        <button class="modal-close lightbox-close" id="closeLightbox">&times;</button>
+        <div id="lightboxImage"></div>
+        <div id="lightboxInfo"></div>
+        <div id="lightboxAdmin" class="lightbox-admin"></div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      function handleLogout() {
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("chapterId");
+        localStorage.removeItem("chapterName");
+        window.location.href = "../index.html";
+      }
+    </script>
+    <script type="module" src="../js/gallery.js"></script>
+  </body>
+</html>

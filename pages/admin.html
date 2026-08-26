@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAD Connect | Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/shared.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <img src="../image/mad.logo.png" alt="MAD Logo" />
+          <div>
+            <h2>MAD Connect</h2>
+          </div>
+        </div>
+        <ul>
+          <li onclick="window.location.href='dashboard.html'">&#127968; Dashboard</li>
+          <li onclick="window.location.href='volunteers.html'">&#128101; Volunteers</li>
+          <li onclick="window.location.href='attendance.html'">&#9989; Attendance</li>
+          <li onclick="window.location.href='analytics.html'">&#128202; Analytics</li>
+          <li onclick="window.location.href='madconnect.html'">&#127758; MAD Connect</li>
+                <li onclick="window.location.href='recognition.html'">&#127942; Recognition</li>
+          <li onclick="window.location.href='stories.html'">&#128214; Stories</li>
+          <li onclick="window.location.href='gallery.html'">&#128247; Gallery</li>
+          <li onclick="window.location.href='alerts.html'">&#128276; Alerts</li>
+          <li class="active" onclick="window.location.href='settings.html'">&#9881; Settings</li>
+        </ul>
+        <div class="sidebar-bottom">
+          <li onclick="handleLogout()">&#128682; Logout</li>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="page-header">
+          <div>
+            <h1>&#128737; Admin Dashboard</h1>
+            <p>Network-wide overview and management</p>
+          </div>
+          <div class="adm-admin-badge">&#128081; Admin</div>
+        </div>
+
+        <div class="adm-global-stats" id="globalStats"></div>
+
+        <div class="adm-two-col">
+          <div class="adm-panel">
+            <h2>&#129658; Network Health</h2>
+            <div class="adm-health-overview" id="healthOverview"></div>
+            <canvas id="healthChart" height="160"></canvas>
+          </div>
+          <div class="adm-panel">
+            <h2>&#128640; Quick Actions</h2>
+            <div class="adm-actions">
+              <a href="https://sessionops.makeadiff.in" target="_blank" class="adm-action-btn">
+                &#128197; Session Ops
+              </a>
+              <a href="https://volunteering.makeadiff.in/cm-admin/auth/login" target="_blank" class="adm-action-btn">
+                &#128218; Better Together
+              </a>
+              <a href="comparison.html" class="adm-action-btn">
+                &#128200; Compare Chapters
+              </a>
+              <a href="alerts.html" class="adm-action-btn">
+                &#128276; View Alerts
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="adm-panel">
+          <h2>&#128203; Chapter Performance Summary</h2>
+          <div class="adm-table-wrap">
+            <table class="adm-perf-table" id="perfTable">
+              <thead>
+                <tr>
+                  <th>Chapter</th>
+                  <th>City</th>
+                  <th>Volunteers</th>
+                  <th>Active</th>
+                  <th>Sessions</th>
+                  <th>Attendance</th>
+                  <th>Health</th>
+                </tr>
+              </thead>
+              <tbody id="perfBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="adm-two-col">
+          <div class="adm-panel">
+            <h2>&#128196; Recent Activity</h2>
+            <ul class="adm-activity" id="activityFeed"></ul>
+          </div>
+          <div class="adm-panel">
+            <h2>&#128221; Audit Log</h2>
+            <ul class="adm-activity" id="auditLog"></ul>
+          </div>
+        </div>
+
+        <div class="adm-panel">
+          <h2>&#128101; User Management</h2>
+          <div class="adm-placeholder" id="userMgmtPlaceholder">
+            <p>User management features coming soon. Manage roles, invite new users, and control access from here.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      function handleLogout() {
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("chapterId");
+        localStorage.removeItem("chapterName");
+        window.location.href = "../index.html";
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="../js/admin.js"></script>
+  </body>
+</html>

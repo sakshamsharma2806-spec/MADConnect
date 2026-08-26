@@ -1,0 +1,98 @@
+/* ===========================
+   ANALYTICS - WHITE THEME
+   =========================== */
+
+.analytics-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 25px 0;
+}
+
+.analytics-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+  transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+}
+
+.analytics-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(230, 30, 77, 0.06);
+  transform: translate(20%, -20%);
+  opacity: 0.6;
+}
+
+.analytics-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary, #e61e4d);
+}
+
+.analytics-card h3 {
+  color: #9ca3af;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.analytics-card h2 {
+  font-size: 32px;
+  color: var(--primary, #e61e4d);
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+.analytics-card p {
+  color: #9ca3af;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.analytics-section {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+  transition: 0.25s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.analytics-section:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.analytics-section h2 {
+  font-size: 17px;
+  color: #1a1a2e;
+  margin-bottom: 18px;
+}
+
+.chart-container {
+  height: 320px;
+  position: relative;
+  width: 100%;
+}
+
+.analytics-section canvas {
+  width: 100% !important;
+  height: 320px !important;
+}
+
+@media (max-width: 900px) {
+  .analytics-cards {
+    grid-template-columns: 1fr;
+  }
+}

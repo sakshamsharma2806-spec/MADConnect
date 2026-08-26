@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAD Connect | Dashboard</title>
+    <link rel="stylesheet" href="../css/shared.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <img src="../image/mad.logo.png" alt="MAD Logo" />
+          <div>
+            <h2>MAD Connect</h2>
+          </div>
+        </div>
+        <ul>
+          <li class="active" onclick="window.location.href='dashboard.html'">&#127968; Dashboard</li>
+          <li onclick="window.location.href='volunteers.html'">&#128101; Volunteers</li>
+          <li onclick="window.location.href='attendance.html'">&#9989; Attendance</li>
+          <li onclick="window.location.href='analytics.html'">&#128202; Analytics</li>
+          <li onclick="window.location.href='madconnect.html'">&#127758; MAD Connect</li>
+                <li onclick="window.location.href='recognition.html'">&#127942; Recognition</li>
+          <li onclick="window.location.href='stories.html'">&#128214; Stories</li>
+          <li onclick="window.location.href='gallery.html'">&#128247; Gallery</li>
+          <li onclick="window.location.href='alerts.html'">&#128276; Alerts</li>
+          <li onclick="window.location.href='settings.html'">&#9881; Settings</li>
+        </ul>
+        <div class="sidebar-bottom">
+          <li onclick="handleLogout()">&#128682; Logout</li>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header>
+          <div class="welcome">
+            <h1 id="greeting"></h1>
+            <p id="todayDate"></p>
+            <p class="chapter-name" id="dynamicChapterLabel"></p>
+          </div>
+          <div class="chapter-card">
+            <h2>Your Chapter</h2>
+            <div class="chapter-details">
+              <p><strong>CHO:</strong> <span id="dynamicUserName"></span></p>
+              <p><strong>Chapter:</strong> <span id="dynamicChapterName"></span></p>
+              <p><strong>Status:</strong> <span class="active-status">&#128994; Active</span></p>
+            </div>
+          </div>
+        </header>
+
+        <section class="main-content">
+          <div class="stats">
+            <div class="card volunteers">
+              <h3>Total Volunteers</h3>
+              <h1 id="totalVolunteers">0</h1>
+              <p>Active members in your chapter</p>
+            </div>
+            <div class="card classes">
+              <h3>Classes Conducted</h3>
+              <h1 id="totalClasses">0</h1>
+              <p>Total sessions this month</p>
+            </div>
+            <div class="card attendance">
+              <h3>Attendance</h3>
+              <h1 id="attendanceRate">0%</h1>
+              <p>Average attendance</p>
+            </div>
+          </div>
+
+          <div class="dashboard-row">
+            <div class="panel">
+              <h2>Quick Actions</h2>
+              <div class="actions">
+                <button onclick="window.location.href='volunteers.html'">Add Volunteer</button>
+                <button onclick="window.location.href='attendance.html'">Take Attendance</button>
+                <button onclick="window.location.href='madconnect.html'">MAD Connect</button>
+                <a href="https://sessionops.makeadiff.in" target="_blank" class="action-link">Session Ops</a>
+                <a href="https://volunteering.makeadiff.in/cm-admin/auth/login" target="_blank" class="action-link">Better Together</a>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h2>Today's Attendance</h2>
+              <h3 id="attendanceStatus" class="pending">&#128994; Pending</h3>
+              <p id="attendanceMessage">Today's attendance has not been submitted yet.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Recent Activity</h2>
+            <ul class="activity" id="activityList"></ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      function handleLogout() {
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("chapterId");
+        localStorage.removeItem("chapterName");
+        window.location.href = "../index.html";
+      }
+    </script>
+    <script type="module" src="../js/dashboard.js"></script>
+  </body>
+</html>

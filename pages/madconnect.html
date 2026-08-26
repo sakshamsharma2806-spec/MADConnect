@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAD Connect | Chapter Network</title>
+    <link rel="stylesheet" href="../css/shared.css" />
+    <link rel="stylesheet" href="../css/madconnect.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <img src="../image/mad.logo.png" alt="MAD Logo" />
+          <div>
+            <h2>MAD Connect</h2>
+          </div>
+        </div>
+        <ul>
+          <li onclick="window.location.href='dashboard.html'">&#127968; Dashboard</li>
+          <li onclick="window.location.href='volunteers.html'">&#128101; Volunteers</li>
+          <li onclick="window.location.href='attendance.html'">&#9989; Attendance</li>
+          <li onclick="window.location.href='analytics.html'">&#128202; Analytics</li>
+          <li class="active" onclick="window.location.href='madconnect.html'">&#127758; MAD Connect</li>
+                <li onclick="window.location.href='recognition.html'">&#127942; Recognition</li>
+          <li onclick="window.location.href='stories.html'">&#128214; Stories</li>
+          <li onclick="window.location.href='gallery.html'">&#128247; Gallery</li>
+          <li onclick="window.location.href='alerts.html'">&#128276; Alerts</li>
+          <li onclick="window.location.href='settings.html'">&#9881; Settings</li>
+        </ul>
+        <div class="sidebar-bottom">
+          <li onclick="handleLogout()">&#128682; Logout</li>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="page-header">
+          <div>
+            <h1>&#127758; MAD Connect</h1>
+            <p>Connect with all MAD chapters across India</p>
+          </div>
+        </div>
+
+        <div class="mc-search-bar">
+          <input
+            type="text"
+            id="mcSearch"
+            placeholder="Search chapters by name, city, or CHO..."
+          />
+        </div>
+
+        <div class="mc-quick-links">
+          <a
+            href="https://sessionops.makeadiff.in"
+            target="_blank"
+            class="mc-quick-link"
+          >
+            &#128197; Session Ops
+          </a>
+          <a
+            href="https://volunteering.makeadiff.in/cm-admin/auth/login"
+            target="_blank"
+            class="mc-quick-link"
+          >
+            &#128218; Better Together
+          </a>
+        </div>
+
+        <div class="mc-network-stats" id="networkStats">
+          <div class="mc-net-stat">
+            <h3 id="totalChapters">0</h3>
+            <p>Total Chapters</p>
+          </div>
+          <div class="mc-net-stat mc-net-healthy">
+            <h3 id="healthyChapters">0</h3>
+            <p>Healthy</p>
+          </div>
+          <div class="mc-net-stat mc-net-warning">
+            <h3 id="warningChapters">0</h3>
+            <p>Needs Attention</p>
+          </div>
+          <div class="mc-net-stat mc-net-critical">
+            <h3 id="criticalChapters">0</h3>
+            <p>Critical</p>
+          </div>
+        </div>
+
+        <div class="mc-grid" id="chapterGrid"></div>
+      </main>
+    </div>
+
+    <div id="chapterModal" class="mc-modal">
+      <div class="mc-modal-content">
+        <button class="mc-modal-close" id="closeModal">&times;</button>
+        <div id="chapterDetail"></div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      function handleLogout() {
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("chapterId");
+        localStorage.removeItem("chapterName");
+        window.location.href = "../index.html";
+      }
+    </script>
+    <script type="module" src="../js/madconnect.js"></script>
+  </body>
+</html>

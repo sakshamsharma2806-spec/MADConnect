@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAD Connect | Analytics</title>
+    <link rel="stylesheet" href="../css/shared.css" />
+    <link rel="stylesheet" href="../css/analytics.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <img src="../image/mad.logo.png" alt="MAD Logo" />
+          <div>
+            <h2>MAD Connect</h2>
+          </div>
+        </div>
+        <ul>
+          <li onclick="window.location.href='dashboard.html'">&#127968; Dashboard</li>
+          <li onclick="window.location.href='volunteers.html'">&#128101; Volunteers</li>
+          <li onclick="window.location.href='attendance.html'">&#9989; Attendance</li>
+          <li class="active" onclick="window.location.href='analytics.html'">&#128202; Analytics</li>
+          <li onclick="window.location.href='madconnect.html'">&#127758; MAD Connect</li>
+                <li onclick="window.location.href='recognition.html'">&#127942; Recognition</li>
+          <li onclick="window.location.href='stories.html'">&#128214; Stories</li>
+          <li onclick="window.location.href='gallery.html'">&#128247; Gallery</li>
+          <li onclick="window.location.href='alerts.html'">&#128276; Alerts</li>
+          <li onclick="window.location.href='settings.html'">&#9881; Settings</li>
+        </ul>
+        <div class="sidebar-bottom">
+          <li onclick="handleLogout()">&#128682; Logout</li>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header>
+          <div class="welcome">
+            <h1>&#128202; Analytics</h1>
+            <p>Insights from your chapter</p>
+            <p class="chapter-name" id="dynamicChapterLabel"></p>
+          </div>
+          <div class="chapter-card">
+            <h2>Your Chapter</h2>
+            <div class="chapter-details">
+              <p><strong>CHO:</strong> <span id="dynamicUserName"></span></p>
+              <p><strong>Chapter:</strong> <span id="dynamicChapterName"></span></p>
+              <p><strong>Status:</strong> <span class="active-status">&#128994; Active</span></p>
+            </div>
+          </div>
+        </header>
+
+        <section class="main-content">
+          <div class="analytics-cards">
+            <div class="analytics-card">
+              <h3>&#128101; Total Volunteers</h3>
+              <h2 id="analyticsVolunteers">0</h2>
+              <p>Total registered volunteers</p>
+            </div>
+            <div class="analytics-card">
+              <h3>&#128197; Attendance Sessions</h3>
+              <h2 id="analyticsSessions">0</h2>
+              <p>Total attendance records</p>
+            </div>
+            <div class="analytics-card">
+              <h3>&#128200; Overall Attendance</h3>
+              <h2 id="analyticsAttendance">0%</h2>
+              <p>Average attendance across sessions</p>
+            </div>
+          </div>
+
+          <div class="analytics-section">
+            <h2>Volunteer Status</h2>
+            <div class="chart-container">
+              <canvas id="volunteerChart"></canvas>
+            </div>
+          </div>
+
+          <div class="analytics-section">
+            <h2>Attendance History</h2>
+            <canvas id="attendanceChart"></canvas>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      function handleLogout() {
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("chapterId");
+        localStorage.removeItem("chapterName");
+        window.location.href = "../index.html";
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="../js/analytics.js"></script>
+  </body>
+</html>

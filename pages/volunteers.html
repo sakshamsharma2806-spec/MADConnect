@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAD Connect | Volunteers</title>
+    <link rel="stylesheet" href="../css/shared.css" />
+    <link rel="stylesheet" href="../css/volunteers.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <img src="../image/mad.logo.png" alt="MAD Logo" />
+          <div>
+            <h2>MAD Connect</h2>
+          </div>
+        </div>
+        <ul>
+          <li onclick="window.location.href='dashboard.html'">&#127968; Dashboard</li>
+          <li class="active" onclick="window.location.href='volunteers.html'">&#128101; Volunteers</li>
+          <li onclick="window.location.href='attendance.html'">&#9989; Attendance</li>
+          <li onclick="window.location.href='analytics.html'">&#128202; Analytics</li>
+          <li onclick="window.location.href='madconnect.html'">&#127758; MAD Connect</li>
+                <li onclick="window.location.href='recognition.html'">&#127942; Recognition</li>
+          <li onclick="window.location.href='stories.html'">&#128214; Stories</li>
+          <li onclick="window.location.href='gallery.html'">&#128247; Gallery</li>
+          <li onclick="window.location.href='alerts.html'">&#128276; Alerts</li>
+          <li onclick="window.location.href='settings.html'">&#9881; Settings</li>
+        </ul>
+        <div class="sidebar-bottom">
+          <li onclick="handleLogout()">&#128682; Logout</li>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <div class="page-header">
+          <div>
+            <h1>&#128101; Volunteers</h1>
+            <p>Manage volunteers of <strong id="chapterDisplay"></strong></p>
+          </div>
+          <button id="addVolunteerBtn">+ Add Volunteer</button>
+        </div>
+
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search volunteers..." />
+        </div>
+
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Volunteer Name</th>
+                <th>Phone Number</th>
+                <th>Shelter Home</th>
+                <th>Status</th>
+                <th>Attendance</th>
+                <th>Certificate</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="volunteerTable"></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <div id="volunteerModal" class="modal">
+      <div class="modal-content">
+        <h2>Add New Volunteer</h2>
+        <div class="form-group">
+          <label>Volunteer Name</label>
+          <input type="text" id="volunteerName" />
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="volunteerPhone" maxlength="10" />
+        </div>
+        <div class="form-group">
+          <label>Shelter Home</label>
+          <p id="chapterDisplay" style="font-weight:600; margin-top:4px;"></p>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="volunteerStatus">
+            <option>Active</option>
+            <option>Inactive</option>
+          </select>
+        </div>
+        <div class="modal-buttons">
+          <button id="cancelBtn">Cancel</button>
+          <button id="saveVolunteerBtn">Save Volunteer</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      function handleLogout() {
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("chapterId");
+        localStorage.removeItem("chapterName");
+        window.location.href = "../index.html";
+      }
+    </script>
+    <script type="module" src="../js/volunteers.js"></script>
+  </body>
+</html>
