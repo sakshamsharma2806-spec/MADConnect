@@ -1,15 +1,48 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+import { Bar, Pie, Line } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
+
+interface Volunteer {
+  _id: string; name: string; phone: string; shelter: string; chapterId: string;
+  status: string; attendedSessions: number; totalSessions: number;
+  attendancePercentage: number; certificateEligible: boolean;
+}
+interface AttendanceSession { _id: string; date: string; shelter: string; chapterId: string; present: string[]; }
 
 export default function AnalyticsPage() {
   const router = useRouter();
   const [user, setUser] = useState<{ name: string; chapterId: string; chapterName: string } | null>(null);
-  const [volCount, setVolCount] = useState(0);
-  const [sessionCount, setSessionCount] = useState(0);
-  const [attendancePct, setAttendancePct] = useState("0%");
+  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
+  const [sessions, setSessions] = useState<AttendanceSession[]>([]);
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -29,15 +62,114 @@ export default function AnalyticsPage() {
       ]);
       const vols = await vRes.json();
       const atts = await aRes.json();
-      const volArr = Array.isArray(vols) ? vols : [];
-      const attArr = Array.isArray(atts) ? atts : [];
-      setVolCount(volArr.length);
-      setSessionCount(attArr.length);
-      let totalPossible = 0, totalPresent = 0;
-      attArr.forEach((s: { present: string[] }) => { totalPossible += volArr.length; totalPresent += s.present.length; });
-      setAttendancePct(totalPossible > 0 ? Math.round((totalPresent / totalPossible) * 100) + "%" : "0%");
+      setVolunteers(Array.isArray(vols) ? vols : []);
+      setSessions(Array.isArray(atts) ? atts : []);
     } catch {}
   }
+
+  const volCount = volunteers.length;
+  const sessionCount = sessions.length;
+  let totalPossible = 0, totalPresent = 0;
+  sessions.forEach((s) => { totalPossible += volCount; totalPresent += s.present.length; });
+  const attendancePct = totalPossible > 0 ? Math.round((totalPresent / totalPossible) * 100) : 0;
+  const eligibleCount = volunteers.filter((v) => v.certificateEligible).length;
+  const activeCount = volunteers.filter((v) => v.status === "Active").length;
+  const inactiveCount = volCount - activeCount;
+
+  const statusPieData = {
+    labels: ["Active", "Inactive"],
+    datasets: [{
+      data: [activeCount, inactiveCount],
+      backgroundColor: ["#22c55e", "#ef4444"],
+      borderWidth: 2,
+      borderColor: "#fff",
+    }],
+  };
+
+  const certPieData = {
+    labels: ["Eligible", "Not Eligible"],
+    datasets: [{
+      data: [eligibleCount, volCount - eligibleCount],
+      backgroundColor: ["#3b82f6", "#f59e0b"],
+      borderWidth: 2,
+      borderColor: "#fff",
+    }],
+  };
+
+  const sortedSessions = [...sessions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const sessionLabels = sortedSessions.map((s, i) => {
+    const d = new Date(s.date);
+    return d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+  });
+  const sessionPresentCounts = sortedSessions.map((s) => s.present.length);
+  const sessionAbsentCounts = sortedSessions.map((s) => volCount - s.present.length);
+
+  const attendanceLineData = {
+    labels: sessionLabels,
+    datasets: [
+      {
+        label: "Present",
+        data: sessionPresentCounts,
+        borderColor: "#22c55e",
+        backgroundColor: "rgba(34,197,94,0.15)",
+        fill: true,
+        tension: 0.4,
+        pointRadius: 5,
+        pointBackgroundColor: "#22c55e",
+      },
+      {
+        label: "Absent",
+        data: sessionAbsentCounts,
+        borderColor: "#ef4444",
+        backgroundColor: "rgba(239,68,68,0.10)",
+        fill: true,
+        tension: 0.4,
+        pointRadius: 5,
+        pointBackgroundColor: "#ef4444",
+      },
+    ],
+  };
+
+  const volBarData = {
+    labels: volunteers.map((v) => v.name.split(" ")[0]),
+    datasets: [{
+      label: "Attendance %",
+      data: volunteers.map((v) => v.attendancePercentage || 0),
+      backgroundColor: volunteers.map((v) =>
+        v.attendancePercentage >= 60 ? "#22c55e" : v.attendancePercentage >= 40 ? "#f59e0b" : "#ef4444"
+      ),
+      borderRadius: 8,
+      borderSkipped: false,
+    }],
+  };
+
+  const barOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, max: 100, ticks: { callback: (v: string | number) => Number(v) + "%" } },
+      x: { grid: { display: false } },
+    },
+  };
+
+  const pieOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "bottom" as const, labels: { padding: 16, usePointStyle: true } },
+    },
+  };
+
+  const lineOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: "bottom" as const, labels: { padding: 16, usePointStyle: true } } },
+    scales: {
+      y: { beginAtZero: true, ticks: { stepSize: 1 } },
+      x: { grid: { display: false } },
+    },
+  };
 
   if (!user) return null;
 
@@ -75,21 +207,39 @@ export default function AnalyticsPage() {
             </div>
             <div className="analytics-card">
               <h3>&#128200; Overall Attendance</h3>
-              <h2>{attendancePct}</h2>
+              <h2>{attendancePct}%</h2>
               <p>Average attendance across sessions</p>
             </div>
           </div>
 
-          <div className="analytics-section">
-            <h2>Volunteer Status</h2>
-            <div className="chart-container">
-              <canvas id="volunteerChart"></canvas>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "20px" }}>
+            <div className="analytics-section">
+              <h2>Volunteer Attendance</h2>
+              <div className="chart-container">
+                <Bar data={volBarData} options={barOptions} />
+              </div>
+            </div>
+            <div className="analytics-section">
+              <h2>Attendance Over Time</h2>
+              <div className="chart-container">
+                <Line data={attendanceLineData} options={lineOptions} />
+              </div>
             </div>
           </div>
 
-          <div className="analytics-section">
-            <h2>Attendance History</h2>
-            <canvas id="attendanceChart"></canvas>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "20px" }}>
+            <div className="analytics-section">
+              <h2>Volunteer Status</h2>
+              <div className="chart-container" style={{ height: "280px", display: "flex", justifyContent: "center" }}>
+                <Pie data={statusPieData} options={pieOptions} />
+              </div>
+            </div>
+            <div className="analytics-section">
+              <h2>Certificate Eligibility</h2>
+              <div className="chart-container" style={{ height: "280px", display: "flex", justifyContent: "center" }}>
+                <Pie data={certPieData} options={pieOptions} />
+              </div>
+            </div>
           </div>
         </section>
       </main>
