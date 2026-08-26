@@ -34,7 +34,8 @@ export default function AttendancePage() {
         fetch(`/api/volunteers?chapterId=${chapterId}`, { headers: { Authorization: `Bearer ${getToken()}` } }),
         fetch(`/api/attendance?chapterId=${chapterId}`, { headers: { Authorization: `Bearer ${getToken()}` } }),
       ]);
-      setVolunteers(Array.isArray(await vRes.json()) ? (await vRes.json()) : []);
+      const vData = await vRes.json();
+      setVolunteers(Array.isArray(vData) ? vData : []);
       const atts = await aRes.json();
       setSessions(Array.isArray(atts) ? atts : []);
     } catch { setToastMsg("Failed to load data."); }

@@ -32,8 +32,10 @@ export default function RecognitionPage() {
         fetch(`/api/volunteers?chapterId=${chapterId}`, { headers: { Authorization: `Bearer ${getToken()}` } }),
         fetch(`/api/attendance?chapterId=${chapterId}`, { headers: { Authorization: `Bearer ${getToken()}` } }),
       ]);
-      setVolunteers(Array.isArray(await vRes.json()) ? (await vRes.json()) : []);
-      setSessions(Array.isArray(await aRes.json()) ? (await aRes.json()) : []);
+      const vData = await vRes.json();
+      setVolunteers(Array.isArray(vData) ? vData : []);
+      const aData = await aRes.json();
+      setSessions(Array.isArray(aData) ? aData : []);
     } catch {}
   }
 
