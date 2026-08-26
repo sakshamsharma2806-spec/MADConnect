@@ -74,7 +74,7 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        <section className="main-content">
+        <section className="content-body">
           <div className="stats">
             <div className="card volunteers">
               <h3>Total Volunteers</h3>

@@ -140,17 +140,6 @@ body::before {
 }
 
 /* ============================= */
-/*         MAIN CONTENT          */
-/* ============================= */
-
-.main-content {
-  flex: 1;
-  padding: 35px 40px;
-  margin-left: 260px;
-  min-height: 100vh;
-}
-
-/* ============================= */
 /*          PAGE HEADER          */
 /* ============================= */
 
@@ -511,7 +500,7 @@ tbody tr:last-child td {
     font-size: 18px;
   }
 
-  .main-content {
+  .content {
     margin-left: 70px;
     padding: 25px 20px;
   }
@@ -550,7 +539,7 @@ tbody tr:last-child td {
     font-size: 16px;
   }
 
-  .main-content {
+  .content {
     margin-left: 0;
     padding: 20px 16px;
     padding-bottom: 80px;

@@ -121,8 +121,7 @@ body::before {
   min-height: 100vh;
 }
 
-.content .main-content {
-  margin-left: 0;
+.content-body {
   padding: 0;
 }
 

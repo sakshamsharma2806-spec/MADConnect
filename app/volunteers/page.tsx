@@ -68,7 +68,7 @@ export default function VolunteersPage() {
   return (
     <div className="dashboard">
       <Sidebar />
-      <main className="main-content">
+      <main className="content">
         <div className="page-header">
           <div>
             <h1>&#128101; Volunteers</h1>

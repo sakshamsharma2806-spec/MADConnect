@@ -100,13 +100,6 @@ body::before {
 .sidebar-bottom li { color: var(--text-secondary); }
 .sidebar-bottom li:hover { background: rgba(239, 68, 68, 0.08); color: #ef4444; transform: translateX(4px); }
 
-.main-content {
-  flex: 1;
-  padding: 35px 40px;
-  margin-left: 260px;
-  min-height: 100vh;
-}
-
 .page-header { margin-bottom: 28px; }
 .page-header h1 { font-size: 28px; font-weight: 700; color: var(--text); }
 .page-header p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
@@ -325,7 +318,7 @@ body::before {
   .sidebar { width: 70px; padding: 20px 10px; }
   .logo-area h2, .sidebar-bottom li { display: none; }
   .sidebar li { text-align: center; padding: 12px 8px; font-size: 18px; }
-  .main-content { margin-left: 70px; padding: 25px 20px; }
+  .content { margin-left: 70px; padding: 25px 20px; }
 }
 
 @media (max-width: 600px) {
@@ -333,7 +326,7 @@ body::before {
   .logo-area, .sidebar-bottom { display: none; }
   .sidebar ul { display: flex; gap: 4px; justify-content: space-around; flex: 1; }
   .sidebar li { margin-bottom: 0; padding: 8px 12px; font-size: 16px; }
-  .main-content { margin-left: 0; padding: 20px 16px; padding-bottom: 80px; }
+  .content { margin-left: 0; padding: 20px 16px; padding-bottom: 80px; }
   .attendance-controls { flex-direction: column; }
   .summary { flex-direction: column; }
   .history-card { flex-direction: column; align-items: flex-start; gap: 12px; }

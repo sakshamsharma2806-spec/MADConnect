@@ -61,7 +61,7 @@ export default function AnalyticsPage() {
           </div>
         </header>
 
-        <section className="main-content">
+        <section className="content-body">
           <div className="analytics-cards">
             <div className="analytics-card">
               <h3>&#128101; Total Volunteers</h3>

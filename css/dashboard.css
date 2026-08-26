@@ -151,13 +151,6 @@ body::before {
    CONTENT AREA
    =========================== */
 
-.content {
-  flex: 1;
-  padding: 35px 40px;
-  margin-left: 260px;
-  min-height: 100vh;
-}
-
 header {
   display: flex;
   justify-content: space-between;
@@ -253,10 +246,6 @@ header p {
 /* ===========================
    MAIN CONTENT
    =========================== */
-
-.main-content {
-  background: transparent;
-}
 
 /* ===========================
    STATS CARDS
