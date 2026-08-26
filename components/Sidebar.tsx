@@ -10,7 +10,7 @@ interface UserInfo {
   chapterName: string;
 }
 
-const pages = [
+const allPages = [
   { id: "dashboard", label: "Dashboard", icon: "\u{1F3E0}", href: "/dashboard", roles: ["cho", "admin", "core"] },
   { id: "volunteers", label: "Volunteers", icon: "\u{1F465}", href: "/volunteers", roles: ["cho", "admin", "core"] },
   { id: "attendance", label: "Attendance", icon: "\u2705", href: "/attendance", roles: ["cho", "admin", "core"] },
@@ -19,12 +19,9 @@ const pages = [
   { id: "recognition", label: "Recognition", icon: "\u{1F3C6}", href: "/recognition", roles: ["cho", "admin", "core"] },
   { id: "stories", label: "Stories", icon: "\u{1F4D6}", href: "/stories", roles: ["cho", "admin", "core"] },
   { id: "gallery", label: "Gallery", icon: "\u{1F4F7}", href: "/gallery", roles: ["cho", "admin", "core"] },
-  { id: "alerts", label: "Alerts", icon: "\u{1F514}", href: "/alerts", roles: ["cho", "admin", "core"] },
-  { id: "settings", label: "Settings", icon: "\u2699", href: "/settings", roles: ["cho", "admin", "core"] },
-];
-
-const adminPages = [
-  { id: "admin", label: "Admin", icon: "\u{1F6E1}", href: "/admin", roles: ["admin"] },
+  { id: "alerts", label: "Alerts", icon: "\u{1F514}", href: "/alerts", roles: ["admin", "core"] },
+  { id: "admin", label: "Admin", icon: "\u{1F6E1}", href: "/admin", roles: ["admin", "core"] },
+  { id: "settings", label: "Settings", icon: "\u2699\uFE0F", href: "/settings", roles: ["cho", "admin", "core"] },
 ];
 
 export default function Sidebar() {
@@ -49,10 +46,8 @@ export default function Sidebar() {
 
   if (!user) return null;
 
-  const isAdmin = user.role === "admin";
-  const allPages = isAdmin ? [...pages, ...adminPages] : pages;
   const filteredPages = allPages.filter((p) => p.roles.includes(user.role));
-  const subtitle = isAdmin ? "Admin Panel" : user.chapterName ? `${user.chapterName} Chapter` : "Chapter Management";
+  const subtitle = user.role === "admin" ? "Admin Panel" : user.chapterName ? `${user.chapterName} Chapter` : "Chapter Management";
 
   return (
     <aside className="sidebar">

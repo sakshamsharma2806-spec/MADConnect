@@ -154,6 +154,26 @@ async function seed() {
       status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
     }));
 
+    const Activity = mongoose.model("Activity", new mongoose.Schema({
+      text: { type: String, required: true },
+      type: { type: String, enum: ["volunteer_added", "volunteer_updated", "volunteer_deleted", "attendance_submitted", "story_created", "story_approved", "chapter_update", "milestone"], default: "chapter_update" },
+      chapterId: { type: String, required: true },
+      createdBy: { type: String, required: true },
+      createdByName: { type: String, required: true },
+      createdAt: { type: String, required: true },
+    }));
+
+    const activities = [
+      { text: 'Volunteer "Aarav Mehta" added', type: "volunteer_added", chapterId: "delhi-arya", createdBy: "seed", createdByName: "Saksham Sharma", createdAt: "2026-07-01T10:00:00.000Z" },
+      { text: 'Volunteer "Diya Sharma" added', type: "volunteer_added", chapterId: "delhi-arya", createdBy: "seed", createdByName: "Saksham Sharma", createdAt: "2026-07-03T11:00:00.000Z" },
+      { text: 'Volunteer "Riya Kapoor" added', type: "volunteer_added", chapterId: "delhi-arya", createdBy: "seed", createdByName: "Saksham Sharma", createdAt: "2026-07-05T09:30:00.000Z" },
+      { text: "Attendance submitted for Delhi Arya — 3 volunteers present", type: "attendance_submitted", chapterId: "delhi-arya", createdBy: "seed", createdByName: "Saksham Sharma", createdAt: "2026-07-10T18:00:00.000Z" },
+      { text: "Attendance submitted for Delhi Arya — 2 volunteers present", type: "attendance_submitted", chapterId: "delhi-arya", createdBy: "seed", createdByName: "Saksham Sharma", createdAt: "2026-07-17T18:00:00.000Z" },
+      { text: "Attendance submitted for Delhi Arya — 3 volunteers present", type: "attendance_submitted", chapterId: "delhi-arya", createdBy: "seed", createdByName: "Saksham Sharma", createdAt: "2026-07-24T18:00:00.000Z" },
+      { text: 'Volunteer "Priya Singh" added', type: "volunteer_added", chapterId: "bal-ashram", createdBy: "seed", createdByName: "Priya Sharma", createdAt: "2026-07-02T10:00:00.000Z" },
+      { text: 'Volunteer "Kabir Joshi" added', type: "volunteer_added", chapterId: "udaan-home", createdBy: "seed", createdByName: "Arjun Patel", createdAt: "2026-07-04T10:00:00.000Z" },
+    ];
+
     console.log("Clearing existing data...");
     await Promise.all([
       User.deleteMany({}),
@@ -162,6 +182,7 @@ async function seed() {
       Attendance.deleteMany({}),
       Story.deleteMany({}),
       Gallery.deleteMany({}),
+      Activity.deleteMany({}),
     ]);
 
     console.log("Seeding users...");
@@ -184,7 +205,28 @@ async function seed() {
     console.log("Seeding gallery...");
     await Gallery.insertMany(gallery);
 
+    console.log("Seeding activities...");
+    await Activity.insertMany(activities);
+
     console.log("Seed complete!");
+
+    console.log("Recalculating volunteer attendance stats...");
+    const allVolunteers = await Volunteer.find();
+    const allSessions = await Attendance.find();
+    for (const vol of allVolunteers) {
+      const chapterSessions = allSessions.filter((s) => s.chapterId === vol.chapterId);
+      const totalSessions = chapterSessions.length;
+      const attended = chapterSessions.filter((s) => s.present.includes(vol.name)).length;
+      const pct = totalSessions > 0 ? Math.round((attended / totalSessions) * 100) : 0;
+      await Volunteer.findByIdAndUpdate(vol._id, {
+        attendedSessions: attended,
+        totalSessions,
+        attendancePercentage: pct,
+        certificateEligible: pct >= 60,
+      });
+    }
+    console.log("Volunteer stats recalculated.");
+
     console.log("Login with any email above and password: password123");
 
     await mongoose.disconnect();

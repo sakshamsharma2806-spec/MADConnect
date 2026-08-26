@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Volunteer from "@/lib/models/Volunteer";
+import Activity from "@/lib/models/Activity";
 import { requireAuth } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
@@ -34,6 +35,16 @@ export async function POST(request: NextRequest) {
     await connectToDatabase();
     const data = await request.json();
     const volunteer = await Volunteer.create(data);
+
+    await Activity.create({
+      text: `Volunteer "${volunteer.name}" added`,
+      type: "volunteer_added",
+      chapterId: volunteer.chapterId,
+      createdBy: auth.userId,
+      createdByName: auth.name,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json(volunteer, { status: 201 });
   } catch (error) {
     console.error("Error adding volunteer:", error);

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 
-interface Chapter { _id: string; name: string; city: string; cho: string; volunteerCount: number; activeVolunteers: number; sessionCount: number; attendanceRate: number; }
+interface Chapter { _id: string; chapterId: string; chapterName: string; name: string; city: string; choName: string; choEmail: string; volunteerCount: number; activeVolunteers: number; sessionCount: number; attendanceRate: number; health: string; status: string; }
 
 export default function MadConnectPage() {
   const router = useRouter();
@@ -12,6 +12,7 @@ export default function MadConnectPage() {
   const [search, setSearch] = useState("");
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
   const [toastMsg, setToastMsg] = useState("");
+  const [compareList, setCompareList] = useState<Chapter[]>([]);
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -30,15 +31,32 @@ export default function MadConnectPage() {
   }
 
   const filtered = chapters.filter((ch) =>
-    ch.name?.toLowerCase().includes(search.toLowerCase()) ||
-    ch.city?.toLowerCase().includes(search.toLowerCase()) ||
-    ch.cho?.toLowerCase().includes(search.toLowerCase())
+    (ch.chapterName || ch.name || "").toLowerCase().includes(search.toLowerCase()) ||
+    (ch.city || "").toLowerCase().includes(search.toLowerCase()) ||
+    (ch.choName || "").toLowerCase().includes(search.toLowerCase())
   );
 
   const totalChapters = chapters.length;
-  const healthy = chapters.filter((ch) => (ch.attendanceRate || 0) >= 70).length;
-  const warning = chapters.filter((ch) => (ch.attendanceRate || 0) >= 40 && (ch.attendanceRate || 0) < 70).length;
-  const critical = chapters.filter((ch) => (ch.attendanceRate || 0) < 40).length;
+  const activeChapters = chapters.filter((ch) => ch.status === "active").length;
+  const healthy = chapters.filter((ch) => ch.health === "healthy").length;
+  const warning = chapters.filter((ch) => ch.health === "needs_attention").length;
+  const critical = chapters.filter((ch) => ch.health === "critical").length;
+
+  const healthBadge = (h: string) => {
+    if (h === "healthy") return { label: "\u{1F7E2} Healthy", cls: "active-status" };
+    if (h === "needs_attention") return { label: "\u{1F7E1} Needs Attention", cls: "inactive-status" };
+    return { label: "\u{1F534} Critical", cls: "inactive-status" };
+  };
+
+  const toggleCompare = (ch: Chapter) => {
+    if (compareList.find((c) => c._id === ch._id)) {
+      setCompareList(compareList.filter((c) => c._id !== ch._id));
+    } else if (compareList.length < 2) {
+      setCompareList([...compareList, ch]);
+    } else {
+      setCompareList([compareList[1], ch]);
+    }
+  };
 
   return (
     <div className="dashboard">
@@ -67,18 +85,58 @@ export default function MadConnectPage() {
           <div className="mc-net-stat mc-net-critical"><h3>{critical}</h3><p>Critical</p></div>
         </div>
 
+        {compareList.length === 2 && (
+          <div className="panel" style={{ marginBottom: "20px" }}>
+            <h2>&#128200; Chapter Comparison</h2>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+              {compareList.map((ch) => {
+                const hb = healthBadge(ch.health);
+                return (
+                  <div key={ch._id} style={{ padding: "16px", border: "1px solid var(--border)", borderRadius: "12px" }}>
+                    <h3 style={{ marginBottom: "8px" }}>{ch.chapterName || ch.name}</h3>
+                    <p><strong>City:</strong> {ch.city}</p>
+                    <p><strong>CHO:</strong> {ch.choName || "N/A"}</p>
+                    <p><strong>Volunteers:</strong> {ch.volunteerCount || 0}</p>
+                    <p><strong>Sessions:</strong> {ch.sessionCount || 0}</p>
+                    <p><strong>Attendance:</strong> {ch.attendanceRate || 0}%</p>
+                    <p><strong>Health:</strong> <span className={`status ${hb.cls}`}>{hb.label}</span></p>
+                  </div>
+                );
+              })}
+            </div>
+            <button className="secondary-btn" style={{ marginTop: "12px" }} onClick={() => setCompareList([])}>Clear Comparison</button>
+          </div>
+        )}
+
         <div className="mc-grid">
           {filtered.length === 0 ? (
             <p style={{ gridColumn: "1/-1", textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>No chapters found.</p>
-          ) : filtered.map((ch) => (
-            <div key={ch._id} className="mc-card" onClick={() => setSelectedChapter(ch)}>
-              <h3>{ch.name}</h3>
-              <p className="mc-city">{ch.city}</p>
-              <p><strong>CHO:</strong> {ch.cho || "N/A"}</p>
-              <p><strong>Volunteers:</strong> {ch.volunteerCount || 0}</p>
-              <p><strong>Attendance:</strong> {ch.attendanceRate || 0}%</p>
-            </div>
-          ))}
+          ) : filtered.map((ch) => {
+            const hb = healthBadge(ch.health);
+            return (
+              <div key={ch._id} className="mc-card" onClick={() => setSelectedChapter(ch)}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
+                  <h3>{ch.chapterName || ch.name}</h3>
+                  <span className={`status ${hb.cls}`} style={{ fontSize: "11px" }}>{hb.label}</span>
+                </div>
+                <p className="mc-city">{ch.city}</p>
+                <p><strong>CHO:</strong> {ch.choName || "N/A"}</p>
+                <p><strong>Volunteers:</strong> {ch.volunteerCount || 0}</p>
+                <p><strong>Sessions:</strong> {ch.sessionCount || 0}</p>
+                <p><strong>Attendance:</strong> {ch.attendanceRate || 0}%</p>
+                <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+                  {ch.choEmail && (
+                    <a href={`mailto:${ch.choEmail}`} className="action-link" style={{ fontSize: "12px", padding: "6px 12px" }} onClick={(e) => e.stopPropagation()}>
+                      &#9993; Contact CHO
+                    </a>
+                  )}
+                  <button className="secondary-btn" style={{ fontSize: "12px", padding: "6px 12px" }} onClick={(e) => { e.stopPropagation(); toggleCompare(ch); }}>
+                    {compareList.find((c) => c._id === ch._id) ? "Remove" : "Compare"}
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </main>
 
@@ -87,12 +145,19 @@ export default function MadConnectPage() {
           <button className="mc-modal-close" onClick={() => setSelectedChapter(null)}>&times;</button>
           {selectedChapter && (
             <div>
-              <h2>{selectedChapter.name}</h2>
+              <h2>{selectedChapter.chapterName || selectedChapter.name}</h2>
               <p><strong>City:</strong> {selectedChapter.city}</p>
-              <p><strong>CHO:</strong> {selectedChapter.cho || "N/A"}</p>
+              <p><strong>CHO:</strong> {selectedChapter.choName || "N/A"}</p>
+              <p><strong>Email:</strong> {selectedChapter.choEmail || "N/A"}</p>
               <p><strong>Volunteers:</strong> {selectedChapter.volunteerCount || 0}</p>
               <p><strong>Sessions:</strong> {selectedChapter.sessionCount || 0}</p>
               <p><strong>Attendance Rate:</strong> {selectedChapter.attendanceRate || 0}%</p>
+              <p><strong>Health:</strong> <span className={`status ${healthBadge(selectedChapter.health).cls}`}>{healthBadge(selectedChapter.health).label}</span></p>
+              {selectedChapter.choEmail && (
+                <a href={`mailto:${selectedChapter.choEmail}`} className="primary-btn" style={{ display: "inline-block", marginTop: "16px", textDecoration: "none" }}>
+                  &#9993; Contact CHO
+                </a>
+              )}
             </div>
           )}
         </div>

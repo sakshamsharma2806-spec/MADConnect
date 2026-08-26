@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 
-interface Volunteer { _id: string; name: string; phone: string; shelter: string; chapterId: string; status: string; }
+interface Volunteer { _id: string; name: string; phone: string; shelter: string; chapterId: string; status: string; attendedSessions: number; totalSessions: number; attendancePercentage: number; certificateEligible: boolean; }
 
 export default function VolunteersPage() {
   const router = useRouter();
@@ -86,20 +86,28 @@ export default function VolunteersPage() {
             <thead>
               <tr>
                 <th>Volunteer Name</th>
-                <th>Phone Number</th>
-                <th>Shelter Home</th>
+                <th>Phone</th>
+                <th>Shelter</th>
+                <th>Attendance</th>
+                <th>Certificate</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={5} style={{ textAlign: "center", padding: "30px", color: "#888" }}>No Volunteers Found</td></tr>
+                <tr><td colSpan={7} style={{ textAlign: "center", padding: "30px", color: "#888" }}>No Volunteers Found</td></tr>
               ) : filtered.map((v) => (
                 <tr key={v._id}>
                   <td>{v.name}</td>
                   <td>{v.phone}</td>
                   <td>{v.shelter}</td>
+                  <td>{v.attendancePercentage || 0}%</td>
+                  <td>
+                    <span className={`status ${(v.certificateEligible) ? "active-status" : "inactive-status"}`}>
+                      {v.certificateEligible ? "Eligible" : "Not Eligible"}
+                    </span>
+                  </td>
                   <td><span className={`status ${v.status === "Active" ? "active-status" : "inactive-status"}`}>{v.status}</span></td>
                   <td>
                     <button className="edit-btn" onClick={() => { setEditingId(v._id); setForm({ name: v.name, phone: v.phone, status: v.status }); setModalOpen(true); }}>{"\u270F"}</button>
